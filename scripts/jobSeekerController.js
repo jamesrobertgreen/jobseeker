@@ -1,18 +1,20 @@
 app.controller('jobSeekerController', function ($scope, searchService) {
     $scope.search = function (keywords) {
         searchService.getCWJobs(keywords).then(function (result) {
-            console.log(result.data.contents);
-            $scope.cwJobsResult = findTag(result.data.contents, '"description"',23);
+            $scope.cwJobsResult = "CWJobs : " + findTag(result.data.contents, '"description"', '>', 23, 3);
         }, function () {
             console.log("fail")
-        })
+        });
+        searchService.getEfinancial(keywords).then(function (result) {
+            $scope.efinancialResult = "Efinancial Careers : " + findTag(result.data.contents, '"numFound"','<', 12, 0);
+        }, function () {
+            console.log("fail")
+        });
     };
     //find a tag in HTML string and return it's contents
-    var findTag = function (htmlString, tag,offset) {
+    var findTag = function (htmlString, tag, terminator, startOffset, endOffset) {
         var start = htmlString.indexOf(tag)
-        console.log(start);
-        var end = htmlString.indexOf('>', start);
-        console.log(end);
-        return htmlString.slice(start+offset, end-3);
+        var end = htmlString.indexOf(terminator, start);
+        return htmlString.slice(start + startOffset, end - endOffset);
     };
 });
