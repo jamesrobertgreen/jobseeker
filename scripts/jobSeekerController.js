@@ -6,7 +6,14 @@ app.controller('jobSeekerController', function ($scope, searchService) {
             console.log("fail")
         });
         searchService.getEfinancial(keywords).then(function (result) {
-            $scope.efinancialResult = "Efinancial Careers : " + findTag(result.data.contents, '"numFound"','<', 12, 0);
+            console.log(result.data.contents);
+            $scope.efinancialResult = "Efinancial Careers : " + findTag(result.data.contents, 'numFound', '<', 12, 0);
+        }, function () {
+            console.log("fail")
+        });
+        searchService.getjobSite(keywords).then(function (result) {
+           // console.log(result.data.contents);
+            $scope.jobSiteResult = "jobSite : " + findTag(result.data.contents, 'searchResultsHeader', '<strong>', 28, 0);
         }, function () {
             console.log("fail")
         });
@@ -15,6 +22,8 @@ app.controller('jobSeekerController', function ($scope, searchService) {
     var findTag = function (htmlString, tag, terminator, startOffset, endOffset) {
         var start = htmlString.indexOf(tag)
         var end = htmlString.indexOf(terminator, start);
+        console.log('start = ' + start);
+        console.log('end = ' + end);
         return htmlString.slice(start + startOffset, end - endOffset);
     };
 });
